@@ -27,22 +27,8 @@ public class OperationsUtil {
 
         try {
             Long accountId = -1L;
-            Cookie[] cookies = request.getCookies();
 
-            Cookie notSecureBankCookie = null;
-
-            for (Cookie cookie : cookies) {
-                if (ServletUtil.NOT_SECURE_BANK_COOKIE.equals(cookie.getName())) {
-                    notSecureBankCookie = cookie;
-                    break;
-                }
-            }
-
-            Account[] cookieAccounts = null;
-            if (notSecureBankCookie == null)
-                cookieAccounts = user.getAccounts();
-            else
-                cookieAccounts = Account.fromBase64List(notSecureBankCookie.getValue());
+            Account[] cookieAccounts = user.getAccounts();
 
             try {
                 accountId = Long.parseLong(accountIdString);
