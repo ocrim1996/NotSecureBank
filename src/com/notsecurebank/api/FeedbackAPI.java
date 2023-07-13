@@ -47,6 +47,7 @@ public class FeedbackAPI extends NotSecureBankAPI {
         String comments;
 
         try {
+            // With this fix implemented in V5, the issue to be addressed in V7 is also excluded. By validating user input, it is not possible to store JavaScript code in the database.
             name = (String) myJson.get("name");
             name = ESAPI.encoder().encodeForHTML(name);
 
