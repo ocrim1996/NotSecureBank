@@ -1,6 +1,8 @@
 package com.notsecurebank.servlet;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -50,8 +52,27 @@ public class AccountViewServlet extends HttpServlet {
             String startTime = request.getParameter("startDate");
             String endTime = request.getParameter("endDate");
 
-            LOG.info("Transactions within '" + startTime + "' and '" + endTime + "'.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/bank/transaction.jsp?" + ((startTime != null) ? "&startTime=" + startTime : "") + ((endTime != null) ? "&endTime=" + endTime : ""));
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String sanitizedStartTime = null;
+            String sanitizedEndTime = null;
+
+            try {
+                // Parsing delle date di input
+                java.util.Date startDate = inputFormat.parse(startTime);
+                java.util.Date endDate = inputFormat.parse(endTime);
+
+                // Formattazione delle date di output nel formato desiderato
+                sanitizedStartTime = outputFormat.format(startDate);
+                sanitizedEndTime = outputFormat.format(endDate);
+
+            } catch (ParseException e) {
+                // Gestisci l'errore o restituisci un messaggio di errore all'utente
+                e.printStackTrace();
+            }
+
+            LOG.info("Transactions within '" + sanitizedStartTime + "' and '" + sanitizedEndTime + "'.");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/bank/transaction.jsp?" + ((sanitizedStartTime != null) ? "&startTime=" + sanitizedStartTime : "") + ((sanitizedEndTime != null) ? "&endTime=" + sanitizedEndTime : ""));
             dispatcher.forward(request, response);
         }
     }
